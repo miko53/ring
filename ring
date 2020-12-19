@@ -23,20 +23,25 @@ help_msg = '''here we are the list of command of ring:
 version_msg = 'ring version 0.1 ()'
 
 parser = ParseOption.new
-parser.parse_option(ARGV)
+in_error = parser.parse_option(ARGV)
 
 # open_config_file
 
-# p "simulation #{parser.simulate}"
-# p "command = #{parser.command}"
-# p "argument = #{parser.args}"
-
-case parser.command
-when :init
-  RingCore.perform_initialize(parser.args, parser.simulate)
-when :help
-  puts version_msg
-  puts help_msg
-when :version
-  puts version_msg
+p "in_error = #{in_error}" 
+p "simulation #{parser.simulate}"
+p "command = #{parser.command}"
+p "argument = #{parser.args}"
+ 
+if in_error
+  puts "wrong command, try help"
+else
+  case parser.command
+  when :init
+    RingCore.perform_initialize(parser.args, parser.simulate)
+  when :help
+    puts version_msg
+    puts help_msg
+  when :version
+    puts version_msg
+  end
 end

@@ -19,29 +19,45 @@ class ParseOption
       else
         case opt_state
         when :no_command
-          opt_state = parse_idle_arg(opt)
+          opt_state, in_error = parse_idle_arg(opt)
         when :init_get_folder
           @args << opt
         when :help, :version
           break
+        when :unknown_command
+          break
         end
       end
     end
+    
+    case @command
+    when :init
+      if @args.count < 1
+        puts "missing argument for init command"
+        in_error = true
+      end
+    end
+    
+    
     in_error
   end
 
   def parse_idle_arg(opt)
+    in_error = false
     case opt
     when 'init'
       state = :init_get_folder
       @command = :init
-    when 'help'
+    when 'help', '-h', '--help'
       state = :help
       @command = :help
     when 'version', '-v', '--version'
       state = :version
       @command = :version
+    else
+      state = :unknown_command
+      in_error = true
     end
-    state
+    [ state, in_error ]
   end
 end
