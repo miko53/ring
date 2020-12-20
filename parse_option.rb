@@ -29,7 +29,7 @@ class ParseOption
         end
       end
     end
-    
+
     case @command
     when :init
       if @args.count < 1
