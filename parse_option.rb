@@ -20,7 +20,7 @@ class ParseOption
         case opt_state
         when :no_command
           opt_state, in_error = parse_idle_arg(opt)
-        when :init_get_folder
+        when :init_get_folder, :register
           @args << opt
         when :help, :version
           break
@@ -36,9 +36,11 @@ class ParseOption
         puts "missing argument for init command"
         in_error = true
       end
+    when :register
+      if @args.count <2
+        in_error = true
+      end
     end
-    
-    
     in_error
   end
 
@@ -54,6 +56,9 @@ class ParseOption
     when 'version', '-v', '--version'
       state = :version
       @command = :version
+    when 'register'
+      @command = :register
+      state = :register
     else
       state = :unknown_command
       in_error = true
