@@ -33,13 +33,11 @@ class ParseOption
     case @command
     when :init
       if @args.count < 1
-        puts "missing argument for init command"
+        puts 'missing argument for init command'
         in_error = true
       end
     when :register
-      if @args.count <2
-        in_error = true
-      end
+      in_error = true if @args.count < 2
     end
     in_error
   end
@@ -63,6 +61,6 @@ class ParseOption
       state = :unknown_command
       in_error = true
     end
-    [ state, in_error ]
+    [state, in_error]
   end
 end
