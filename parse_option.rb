@@ -21,7 +21,7 @@ class ParseOption
       case opt_state
       when :no_command
         opt_state, in_error = parse_idle_arg(opt)
-      when :init_get_folder, :register
+      when :init_get_folder, :register, :status_get_repo, :clone_get_repo, :destroy_get_repo
         @args << opt
       when :help, :version
         break
@@ -38,6 +38,15 @@ class ParseOption
       end
     when :register
       in_error = true if @args.count < 2
+    when :help, :version, :list, :status, :clone
+      # no special do
+    when :destroy
+      if @args.count < 1
+        puts 'precise if all repository are concerned [all] or give a repo'
+        in_error = true
+      end
+    else
+      in_error = true
     end
     in_error
   end
@@ -60,6 +69,15 @@ class ParseOption
     when 'list'
       @command = :list
       state = :list
+    when 'status'
+      @command = :status
+      state = :status_get_repo
+    when 'clone'
+      @command = :clone
+      state = :clone_get_repo
+    when 'destroy'
+      @command = :destroy
+      state = :destroy_get_repo
     else
       state = :unknown_command
       in_error = true

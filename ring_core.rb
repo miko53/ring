@@ -60,11 +60,59 @@ class RingCore
     end
   end
 
+  def self.perform_status(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display("\nin #{repo['folder']}:")
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} status", simulate)
+      Log.display(r[0])
+    end
+  end
+
+  def self.perform_clone(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display("\nin #{repo['folder']}:")
+      CProcess.execute("#{GIT_EXEC} clone --recursive #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+    end
+  end
+
+  def self.perform_destroy(args, simulate)
+    Log.warning('All the data stored in repository will be DELETED ! Please check before if all have been validated and pushed')
+    Log.display('Confirm (yes/NO) ?')
+    confirm = $stdin.gets.chomp
+    if confirm == 'yes' || confirm == 'y'
+      do_really_perform_destroy(args, simulate)
+    else
+      Log.display('canceled')
+    end
+  end
+
   def self.repo_unique?(config, repo_name, repo_folder)
+    # check if the name of the repository or the folder where clone is not already present in config
     config['list_repo'].select { |repo| ((repo['name'] == repo_name) || (repo['folder'] == repo_folder)) }.count.zero?
   end
 
-  private_class_method :repo_unique?
+  def self.do_really_perform_destroy(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      if args[0] == 'all' || (repo['name'] =~ Regexp.new(args[0]))
+        Log.display("in #{repo['folder']}")
+        CProcess.execute("rm -rf #{repo['folder']}", simulate)
+      end
+    end
+  end
+
+  private_class_method :repo_unique?, :do_really_perform_destroy
 end
 
 class RingConfig
