@@ -12,7 +12,6 @@ CONFIG_VERSION = '1.0.0'
 GIT_EXEC = 'git'
 
 class RingCore
-
   def self.perform_initialize(args, simulate)
     r = CProcess.execute("mkdir #{args[0]}", simulate)
     r = CProcess.execute("cd #{args[0]} && #{GIT_EXEC} init", simulate) if r[1].zero?
@@ -43,9 +42,9 @@ class RingCore
       args[3] = './' if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
       rconfig.save unless simulate
-      puts 'register correctly done!'
+      Log.display 'register correctly done!'
     else
-      puts "repository #{args[0]} already exists, it can not be added a second one"
+      Log.display "repository #{args[0]} already exists, it can not be added a second one"
     end
   end
 
@@ -87,7 +86,7 @@ class RingConfig
       @link_config = YAML.safe_load(f)
       in_error = read_config_file
     else
-      puts 'error: unable to find a ring config file until the root directory'
+      Log.error 'unable to find a ring config file until the root directory'
       in_error = true
     end
     in_error
@@ -105,10 +104,12 @@ class RingConfig
     filename = LINK_FILENAME
     abs_path = File.realpath(Dir.getwd).split('/')
     found = false
+
+    # search LINK_FILENAME until reach the root directory
     while !found && !abs_path.empty?
       path = abs_path.join('/') + "/#{filename}"
       if File.exist?(path)
-        puts "warning: ring config file not found in current directory but in #{path}" if count >= 1
+        Log.warning "ring config file not found in current directory but in #{path}" if count >= 1
         Dir.chdir(File.dirname(path))
         found = true
       else
@@ -116,7 +117,8 @@ class RingConfig
       end
       count += 1
     end
-    p "found = #{found} path = #{path}"
+
+    Log.debug "found = #{found} path = #{path}"
     found
   end
 
