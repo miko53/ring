@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
+require_relative 'log'
+
 class CProcess
   def self.execute(command, is_simulation)
     if is_simulation == true
-      puts("execute : #{command}")
+      Log.display "execute : #{command}"
       [0, 0]
     else
+      Log.info "Launch #{command}"
       result = `#{command}`
       status = $?
-      p "result = #{result}"
-      p "status = #{status} exit_status = #{status.exitstatus}"
+      Log.debug "result = #{result}"
+      Log.debug "status = #{status} exit_status = #{status.exitstatus}"
       [result, status.exitstatus]
     end
   end

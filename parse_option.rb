@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class ParseOption
-  attr_reader :command, :args, :simulate
+  attr_reader :command, :args, :simulate, :verbose
 
   def initialize
     @command = :no_command
     @simulate = false
+    @verbose = 0
     @args = []
   end
 
@@ -14,19 +15,18 @@ class ParseOption
     opt_state = :no_command
 
     argv.each do |opt|
-      if opt == '-s'
-        @simulate = true
-      else
-        case opt_state
-        when :no_command
-          opt_state, in_error = parse_idle_arg(opt)
-        when :init_get_folder, :register
-          @args << opt
-        when :help, :version
-          break
-        when :unknown_command
-          break
-        end
+      @simulate = true if opt == '-s'
+      @verbose = 1 if opt == '-v'
+      @verbose = 2 if opt == '-vv'
+      case opt_state
+      when :no_command
+        opt_state, in_error = parse_idle_arg(opt)
+      when :init_get_folder, :register
+        @args << opt
+      when :help, :version
+        break
+      when :unknown_command
+        break
       end
     end
 

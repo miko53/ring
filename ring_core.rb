@@ -3,6 +3,7 @@
 require 'yaml'
 require 'byebug'
 require_relative 'process'
+require_relative 'log'
 
 CONFIG_FILENAME = 'ring_config'
 LINK_FILENAME = '.ring_config'
@@ -11,30 +12,33 @@ CONFIG_VERSION = '1.0.0'
 GIT_EXEC = 'git'
 
 class RingCore
-  
+
   def self.perform_initialize(args, simulate)
     r = CProcess.execute("mkdir #{args[0]}", simulate)
     r = CProcess.execute("cd #{args[0]} && #{GIT_EXEC} init", simulate) if r[1].zero?
 
     if simulate == true
-      puts "create link file(#{LINK_FILENAME})"
-      puts "create config file (#{args[0]}/#{CONFIG_FILENAME})"
+      Log.display "create link file(#{LINK_FILENAME})"
+      Log.display "create config file (#{args[0]}/#{CONFIG_FILENAME})"
       return true
     end
 
     if r[1].zero?
       config = RingConfig.new
       status = config.create(args[0])
+      Log.display "initialize done successfully !" if status == true
+    else
+      Log.display "initialize failed !"
     end
-    status
   end
-  
+
   def self.perform_register(args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read
     return if in_error
 
     if repo_unique?(rconfig.config, args[0]) == true
+      #set default value branch and folder when no precised
       args[2] = 'master' if args[2].nil?
       args[3] = './' if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
