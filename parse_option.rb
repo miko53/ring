@@ -25,7 +25,7 @@ class ParseOption
         @args << opt
       when :help, :version
         break
-      when :unknown_command
+      when :list, :unknown_command
         break
       end
     end
@@ -57,6 +57,9 @@ class ParseOption
     when 'register'
       @command = :register
       state = :register
+    when 'list'
+      @command = :list
+      state = :list
     else
       state = :unknown_command
       in_error = true

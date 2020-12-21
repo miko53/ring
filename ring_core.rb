@@ -25,9 +25,9 @@ class RingCore
     if r[1].zero?
       config = RingConfig.new
       status = config.create(args[0])
-      Log.display "initialize done successfully !" if status == true
+      Log.display 'initialize done successfully !' if status == true
     else
-      Log.display "initialize failed !"
+      Log.display 'initialize failed !'
     end
   end
 
@@ -36,27 +36,38 @@ class RingCore
     in_error = rconfig.read
     return if in_error
 
-    if repo_unique?(rconfig.config, args[0]) == true
-      #set default value branch and folder when no precised
+    if repo_unique?(rconfig.config, args[0], args[3]) == true
+
+      # set default value branch and folder when no precised
       args[2] = 'master' if args[2].nil?
       args[3] = './' if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
     else
-      Log.display "repository #{args[0]} already exists, it can not be added a second one"
+      Log.display "repository #{args[0]} or located at #{args[3]} already exists, it can not be added a second one"
     end
   end
 
-  def self.repo_unique?(config, repo_name)
-    config['list_repo'].select { |repo| repo['name'] == repo_name }.count.zero?
+  def self.perform_list
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    Log.display 'list of registered repository:'
+    rconfig.config['list_repo'].each do |repo|
+      Log.display " - #{repo['name']} in #{repo['folder']} ==> #{repo['url']} (#{repo['branch']})"
+    end
+  end
+
+  def self.repo_unique?(config, repo_name, repo_folder)
+    config['list_repo'].select { |repo| ((repo['name'] == repo_name) || (repo['folder'] == repo_folder)) }.count.zero?
   end
 
   private_class_method :repo_unique?
 end
 
 class RingConfig
-
   attr_accessor :config
 
   def initialize
