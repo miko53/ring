@@ -5,20 +5,24 @@ require_relative 'parse_option'
 require_relative 'ring_core'
 require_relative 'log'
 
-help_msg = '''here we are the list of command of ring:
+help_msg = <<-HELP_MSG
+here we are the list of command of ring:
  - ring init <folder> : create a new repo organization
- - ring register <name> <url> <branch> <folder> : insert a new repo inside group of depot at the specifed folder
-                                                  if folder is omitted, the repo will be retrieved at the current directory
-                                                  if branch is also omitted, it will be considered as default one
+ - ring register <name> <url> <branch> <folder> :
+    - insert a new repo inside group of depot at the specifed folder
+        if folder is omitted, the repo will be retrieved at the current directory
+        if branch is also omitted, it will be considered as default one
  - ring list : gives the list of repository managed
  - ring status : give the status of all repositories inclused in the configuration
  - ring clone : allow to clone all the repostories included in the configuration
  - ring destroy all : allow to remove all cloned repositories
+ - ring create action <action_name> : create an action
+ - ring insert action <action_name> <repo_name> <commands>
 modifiers:
  -s : to simulate the command
  -v : add verbose information
- -vv : for debug information
-'''
+ -vv : add more verbose information (debug)
+HELP_MSG
 
 version_msg = 'ring version 0.1 ()'
 

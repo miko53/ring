@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+class ParseOptionState
+  IDLE = 0
+  PARSE_COMMAND = 1
+  PARSE_SUB_COMMAND = 2
+  GET_NEXT_ARGS = 3
+  END_PARSE = 4
+end
+
 class ParseOption
   attr_reader :command, :args, :simulate, :verbose
 
@@ -12,24 +20,46 @@ class ParseOption
 
   def parse_option(argv)
     in_error = false
-    opt_state = :no_command
-
+    opt_state = ParseOptionState::IDLE
     argv.each do |opt|
-      @simulate = true if opt == '-s'
-      @verbose = 1 if opt == '-v'
-      @verbose = 2 if opt == '-vv'
+      next if check_modifier(opt)
+
       case opt_state
-      when :no_command
+      when ParseOptionState::IDLE
         opt_state, in_error = parse_idle_arg(opt)
-      when :init_get_folder, :register, :status_get_repo, :clone_get_repo, :destroy_get_repo
+      when ParseOptionState::GET_NEXT_ARGS
         @args << opt
-      when :help, :version
+      when ParseOptionState::END_PARSE
         break
-      when :list, :unknown_command
+      when ParseOptionState::PARSE_SUB_COMMAND
+        opt_state, in_error = parse_sub_command(opt)
+      else
+        in_error = true
         break
       end
     end
 
+    in_error = check_nb_argument unless in_error == true
+    in_error
+  end
+
+  def check_modifier(option)
+    is_modifier = true
+    case option
+    when '-s'
+      @simulate = true
+    when '-v'
+      @verbose = 1
+    when '-vv'
+      @verbose = 2
+    else
+      is_modifier = false
+    end
+    is_modifier
+  end
+
+  def check_nb_argument
+    in_error = false
     case @command
     when :init
       if @args.count < 1
@@ -45,41 +75,61 @@ class ParseOption
         puts 'precise if all repository are concerned [all] or give a repo'
         in_error = true
       end
+    when :create_action
+      if @args.count < 1
+        puts 'name action is not specified, please add it'
+        in_error = true
+      end
     else
       in_error = true
     end
     in_error
   end
 
-  def parse_idle_arg(opt)
+  def parse_idle_arg(option)
     in_error = false
-    case opt
+    case option
     when 'init'
-      state = :init_get_folder
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :init
     when 'help', '-h', '--help'
-      state = :help
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :help
     when 'version', '-v', '--version'
-      state = :version
+      state = ParseOptionState::END_PARSE
       @command = :version
     when 'register'
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :register
-      state = :register
     when 'list'
+      state = ParseOptionState::END_PARSE
       @command = :list
-      state = :list
     when 'status'
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :status
-      state = :status_get_repo
     when 'clone'
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :clone
-      state = :clone_get_repo
     when 'destroy'
+      state = ParseOptionState::GET_NEXT_ARGS
       @command = :destroy
-      state = :destroy_get_repo
+    when 'create'
+      state = ParseOptionState::PARSE_SUB_COMMAND
     else
-      state = :unknown_command
+      state = ParseOptionState::IDLE
+      in_error = true
+    end
+    [state, in_error]
+  end
+
+  def parse_sub_command(option)
+    in_error = false
+    case option
+    when 'action'
+      @command = :create_action
+      state = ParseOptionState::GET_NEXT_ARGS
+    else
+      state = ParseOptionState::PARSE_SUB_COMMAND
       in_error = true
     end
     [state, in_error]
