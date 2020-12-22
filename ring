@@ -25,7 +25,7 @@ modifiers:
  -vv : add more verbose information (debug)
 HELP_MSG
 
-version_msg = 'ring version 0.1 ()'
+version_msg = 'ring version 0.1'
 
 parser = ParseOption.new
 in_error = parser.parse_option(ARGV)
@@ -62,5 +62,7 @@ else
     RingCore.perform_destroy(parser.args, parser.simulate)
   when :create_action
     RingCore.perform_create_action(parser.args, parser.simulate)
+  when :insert_action
+    RingCore.perform_insert_action(parser.args, parser.simulate)
   end
 end

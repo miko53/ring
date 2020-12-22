@@ -36,7 +36,7 @@ class RingCore
 
       # set default value branch and folder when no precised
       args[2] = 'master' if args[2].nil?
-      args[3] = './' if args[3].nil?
+      #args[3] = '' if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
@@ -115,6 +115,25 @@ class RingCore
     end
   end
 
+  def self.perform_insert_action(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    action_selected = rconfig.config['actions'].select { |action| action['name'] == args[0] }.first
+    if action_selected.nil?
+      Log.display "action #{args[0]} not found"
+    elsif rconfig.get_list_repo.select { |name| name == args[1] }.count.zero?
+      Log.error("the repo #{args[1]} doesn't exist, command not added")
+    else
+      insert_repo_in_repo_action(action_selected, args)
+      rconfig.save unless simulate
+      Log.display 'done!'
+    end
+  end
+
+  #private method list
+
   def self.repo_unique?(config, repo_name, repo_folder)
     # check if the name of the repository or the folder where clone is not already present in config
     config['list_repo'].select { |repo| ((repo['name'] == repo_name) || (repo['folder'] == repo_folder)) }.count.zero?
@@ -138,5 +157,17 @@ class RingCore
     config['actions'].select { |repo_action| (repo_action['name'] == repo_name) }.count.zero?
   end
 
+  def self.insert_repo_in_repo_action(action_selected, args)
+    existing_action = action_selected['repo_action'].select { |repo_cmd| repo_cmd['repo'] == args[1] }.first
+    if existing_action.nil?
+      action_selected['repo_action'] << { 'repo' => args[1], 'command' => args[2] }
+      Log.display("action inserted for repository #{args[1]}")
+    else
+      existing_action['command'] = args[2]
+      Log.display("action updated for repository #{existing_action['repo']}")
+    end
+  end
+
   private_class_method :repo_unique?, :do_really_perform_destroy, :action_already_exists?
+  private_class_method :insert_repo_in_repo_action
 end

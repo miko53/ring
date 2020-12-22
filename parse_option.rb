@@ -3,9 +3,10 @@
 class ParseOptionState
   IDLE = 0
   PARSE_COMMAND = 1
-  PARSE_SUB_COMMAND = 2
+  PARSE_CREATE_COMMAND = 2
   GET_NEXT_ARGS = 3
   END_PARSE = 4
+  PARSE_INSERT_COMMAND = 5
 end
 
 class ParseOption
@@ -31,8 +32,10 @@ class ParseOption
         @args << opt
       when ParseOptionState::END_PARSE
         break
-      when ParseOptionState::PARSE_SUB_COMMAND
-        opt_state, in_error = parse_sub_command(opt)
+      when ParseOptionState::PARSE_CREATE_COMMAND
+        opt_state, in_error = parse_create_command(opt)
+      when ParseOptionState::PARSE_INSERT_COMMAND
+        opt_state, in_error = parse_insert_command(opt)
       else
         in_error = true
         break
@@ -43,6 +46,7 @@ class ParseOption
     in_error
   end
 
+private
   def check_modifier(option)
     is_modifier = true
     case option
@@ -82,7 +86,11 @@ class ParseOption
         puts 'name action is not specified, please add it'
         in_error = true
       end
-
+    when :insert_action
+      if @args.count < 3
+        puts 'missing argument'
+        in_error = true
+      end
     else
       in_error = true
     end
@@ -120,7 +128,9 @@ class ParseOption
       state = ParseOptionState::GET_NEXT_ARGS
       @command = :destroy
     when 'create'
-      state = ParseOptionState::PARSE_SUB_COMMAND
+      state = ParseOptionState::PARSE_CREATE_COMMAND
+    when 'insert'
+      state = ParseOptionState::PARSE_INSERT_COMMAND
     else
       state = ParseOptionState::IDLE
       in_error = true
@@ -128,14 +138,27 @@ class ParseOption
     [state, in_error]
   end
 
-  def parse_sub_command(option)
+  def parse_create_command(option)
     in_error = false
     case option
     when 'action'
       @command = :create_action
       state = ParseOptionState::GET_NEXT_ARGS
     else
-      state = ParseOptionState::PARSE_SUB_COMMAND
+      state = ParseOptionState::PARSE_CREATE_COMMAND
+      in_error = true
+    end
+    [state, in_error]
+  end
+
+  def parse_insert_command(option)
+    in_error = false
+    case option
+    when 'action'
+      @command = :insert_action
+      state = ParseOptionState::GET_NEXT_ARGS
+    else
+      state = ParseOptionState::PARSE_INSERT_COMMAND
       in_error = true
     end
     [state, in_error]

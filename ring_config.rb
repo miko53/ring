@@ -50,6 +50,14 @@ class RingConfig
     @config_file.write(@config.to_yaml)
   end
 
+  def get_list_repo
+    r = Array.new
+    @config['list_repo'].each do |repo|
+      r << repo['name']
+    end
+    r
+  end
+
   private
 
   def search_ring_link_file
