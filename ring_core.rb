@@ -50,7 +50,6 @@ class RingCore
     in_error = rconfig.read
     return if in_error
 
-    Log.debug rconfig.config['list_repo']
     rconfig.config['list_repo'].delete_if { |repo| repo['name'] == args[0] }
     Log.debug rconfig.config['list_repo']
     rconfig.save unless simulate
@@ -102,6 +101,20 @@ class RingCore
     end
   end
 
+  def self.perform_create_action(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    if action_already_exists?(rconfig.config, args[0]) == true
+      rconfig.config['actions'] << { 'name' => args[0], 'repo_action' => [] }
+      rconfig.save unless simulate
+      Log.display 'action correctly added!'
+    else
+      Log.display "action #{args[0]} already exists, it can not be added a second one"
+    end
+  end
+
   def self.repo_unique?(config, repo_name, repo_folder)
     # check if the name of the repository or the folder where clone is not already present in config
     config['list_repo'].select { |repo| ((repo['name'] == repo_name) || (repo['folder'] == repo_folder)) }.count.zero?
@@ -120,5 +133,10 @@ class RingCore
     end
   end
 
-  private_class_method :repo_unique?, :do_really_perform_destroy
+  def self.action_already_exists?(config, repo_name)
+    # check if the name of the repository or the folder where clone is not already present in config
+    config['actions'].select { |repo_action| (repo_action['name'] == repo_name) }.count.zero?
+  end
+
+  private_class_method :repo_unique?, :do_really_perform_destroy, :action_already_exists?
 end

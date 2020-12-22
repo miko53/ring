@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 require_relative 'log'
 
@@ -14,6 +16,7 @@ class RingConfig
     @config = {}
     @config['version'] = CONFIG_VERSION
     @config['list_repo'] = []
+    @config['actions'] = []
   end
 
   def create(root_folder)

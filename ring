@@ -61,5 +61,6 @@ else
   when :destroy
     RingCore.perform_destroy(parser.args, parser.simulate)
   when :create_action
+    RingCore.perform_create_action(parser.args, parser.simulate)
   end
 end
