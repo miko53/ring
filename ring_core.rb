@@ -36,7 +36,7 @@ class RingCore
 
       # set default value branch and folder when no precised
       args[2] = 'master' if args[2].nil?
-      #args[3] = '' if args[3].nil?
+      args[3] = set_default_folder_name(args[1]) if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
@@ -134,6 +134,11 @@ class RingCore
 
   #private method list
 
+  def self.set_default_folder_name(url)
+    last_name = url.split('/').last
+    last_name.chomp!('.git')
+  end
+
   def self.repo_unique?(config, repo_name, repo_folder)
     # check if the name of the repository or the folder where clone is not already present in config
     config['list_repo'].select { |repo| ((repo['name'] == repo_name) || (repo['folder'] == repo_folder)) }.count.zero?
@@ -168,6 +173,7 @@ class RingCore
     end
   end
 
-  private_class_method :repo_unique?, :do_really_perform_destroy, :action_already_exists?
+  private_class_method :set_default_folder_name, :repo_unique?
+  private_class_method :do_really_perform_destroy, :action_already_exists?
   private_class_method :insert_repo_in_repo_action
 end
