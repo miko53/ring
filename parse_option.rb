@@ -68,6 +68,8 @@ class ParseOption
       end
     when :register
       in_error = true if @args.count < 2
+    when :unregister
+      in_error = true if @args.count < 1
     when :help, :version, :list, :status, :clone
       # no special do
     when :destroy
@@ -80,6 +82,7 @@ class ParseOption
         puts 'name action is not specified, please add it'
         in_error = true
       end
+
     else
       in_error = true
     end
@@ -101,6 +104,9 @@ class ParseOption
     when 'register'
       state = ParseOptionState::GET_NEXT_ARGS
       @command = :register
+    when 'unregister'
+      state = ParseOptionState::GET_NEXT_ARGS
+      @command = :unregister
     when 'list'
       state = ParseOptionState::END_PARSE
       @command = :list

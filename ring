@@ -12,6 +12,7 @@ here we are the list of command of ring:
     - insert a new repo inside group of depot at the specifed folder
         if folder is omitted, the repo will be retrieved at the current directory
         if branch is also omitted, it will be considered as default one
+ - ring unregister <repo_name> : remove a repository
  - ring list : gives the list of repository managed
  - ring status : give the status of all repositories inclused in the configuration
  - ring clone : allow to clone all the repostories included in the configuration
@@ -44,6 +45,8 @@ else
     RingCore.perform_initialize(parser.args, parser.simulate)
   when :register
     RingCore.perform_register(parser.args, parser.simulate)
+  when :unregister
+    RingCore.perform_unregister(parser.args, parser.simulate)
   when :list
     RingCore.perform_list
   when :help
@@ -57,5 +60,6 @@ else
     RingCore.perform_clone(parser.args, parser.simulate)
   when :destroy
     RingCore.perform_destroy(parser.args, parser.simulate)
+  when :create_action
   end
 end
