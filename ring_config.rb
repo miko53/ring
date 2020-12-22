@@ -51,7 +51,7 @@ class RingConfig
   end
 
   def get_list_repo
-    r = Array.new
+    r = []
     @config['list_repo'].each do |repo|
       r << repo['name']
     end

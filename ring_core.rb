@@ -36,7 +36,7 @@ class RingCore
 
       # set default value branch and folder when no precised
       args[2] = 'master' if args[2].nil?
-      args[3] = set_default_folder_name(args[1]) if args[3].nil?
+      args[3] = default_folder_name(args[1]) if args[3].nil?
       rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
@@ -122,7 +122,7 @@ class RingCore
 
     action_selected = rconfig.config['actions'].select { |action| action['name'] == args[0] }.first
     if action_selected.nil?
-      Log.display "action #{args[0]} not found"
+      Log.error "action #{args[0]} not found"
     elsif rconfig.get_list_repo.select { |name| name == args[1] }.count.zero?
       Log.error("the repo #{args[1]} doesn't exist, command not added")
     else
@@ -132,9 +132,26 @@ class RingCore
     end
   end
 
-  #private method list
+  def self.perform_execute_action(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
 
-  def self.set_default_folder_name(url)
+    action_to_perform = rconfig.config['actions'].select { |action_list| action_list['name'] == args[0] }.first
+    if action_to_perform.nil?
+      Log.error "action #{args[0]} not found"
+    else
+      action_to_perform['repo_action'].each do |action_repo|
+        Log.display "in repo #{action_repo['repo']}:"
+        CProcess.spawn(action_repo['command'], simulate)
+      end
+      Log.display 'done!'
+    end
+  end
+
+  # private method list
+
+  def self.default_folder_name(url)
     last_name = url.split('/').last
     last_name.chomp!('.git')
   end
@@ -173,7 +190,7 @@ class RingCore
     end
   end
 
-  private_class_method :set_default_folder_name, :repo_unique?
+  private_class_method :default_folder_name, :repo_unique?
   private_class_method :do_really_perform_destroy, :action_already_exists?
   private_class_method :insert_repo_in_repo_action
 end

@@ -16,4 +16,14 @@ class CProcess
       [result, status.exitstatus]
     end
   end
+
+  def self.spawn(command, is_simulation)
+    if is_simulation == true
+      Log.display "launch : #{command}"
+    else
+      Log.info "Launch #{command}"
+      pid = Process.spawn(command)
+      Process.wait(pid)
+    end
+  end
 end

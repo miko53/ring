@@ -19,6 +19,7 @@ here we are the list of command of ring:
  - ring destroy all : allow to remove all cloned repositories
  - ring create action <action_name> : create an action
  - ring insert action <action_name> <repo_name> <commands>
+ - ring (execute|exec) <action_name> : execute the specified action for each repo
 modifiers:
  -s : to simulate the command
  -v : add verbose information
@@ -64,5 +65,7 @@ else
     RingCore.perform_create_action(parser.args, parser.simulate)
   when :insert_action
     RingCore.perform_insert_action(parser.args, parser.simulate)
+  when :execute_action
+    RingCore.perform_execute_action(parser.args, parser.simulate)
   end
 end

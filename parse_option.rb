@@ -47,6 +47,7 @@ class ParseOption
   end
 
 private
+
   def check_modifier(option)
     is_modifier = true
     case option
@@ -91,6 +92,11 @@ private
         puts 'missing argument'
         in_error = true
       end
+    when :execute_action
+      if @args.count < 1
+        puts 'action is not given'
+        in_error = true
+      end
     else
       in_error = true
     end
@@ -131,6 +137,9 @@ private
       state = ParseOptionState::PARSE_CREATE_COMMAND
     when 'insert'
       state = ParseOptionState::PARSE_INSERT_COMMAND
+    when 'execute', 'exec'
+      @command = :execute_action
+      state = ParseOptionState::GET_NEXT_ARGS
     else
       state = ParseOptionState::IDLE
       in_error = true
