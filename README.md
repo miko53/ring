@@ -6,6 +6,43 @@ need to group them to produce a more large software.
 
 This tool can help to manage whole GIT repository
 
+## how it work ? initialisation
+
+ring uses a special repository to store information about another one.
+It is declared with the command:
+ - `ring init <folder>`
+with this command, ring creates a GIT repository in `<folder>` and stores inside
+a file `ring_config` which stores all necessary information on repository.
+Moreover a file `.ring_config` is created when the command is launched and do a link
+with the `<folder>` directory
+
+Then you can use the command `register` to insert repositories to include
+
+
+## main commands
+
+### command register
+
+`ring register <repository name> <repository url> <checkout branch> <folder where clone it>`
+
+This command declares a new repository (by including it into `ring_config` file)/
+it allows you to automatically clone it in the specified directory and checkout the right branch
+(with the `command ring clone`)
+
+### command list
+
+`ring list`
+
+Returns the list of registred repositories
+
+### command status
+
+`ring status`
+
+This command executes a `git status` on each declared repository and displays the result
+
+## list of commands
+
 here we are the list of commands of ring:
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
@@ -31,39 +68,3 @@ here we are the list of commands of ring:
  -s : to simulate the command
  -v : add verbose information
  -vv : add more verbose information (debug)
-
-## how it work ? initialisation
-
-ring uses a special repository to store information about another one.
-It is declared with the command:
- - `ring init <folder>`
-with this command, ring creates a GIT repository in `<folder>` and stores inside
-a file `ring_config` which stores all necessary information on repository.
-Moreover a file `.ring_config` is created when the command is launched and do a link
-with the `<folder>` directory
-
-Then you can use the command `register` to insert repositories to include
-
-
-## main command
-
-### command register
-
-`ring register <repository name> <repository url> <checkout branch> <folder where clone it>`
-
-This command declares a new repository (by including it into `ring_config` file)/
-it allows you to automatically clone it in the specified directory and checkout the right branch
-(with the `command ring clone`)
-
-### command list
-
-`ring list`
-
-Returns the list of registred repositories
-
-### command status
-
-`ring status`
-
-This command executes a `git status` on each declared repository and displays the result
-
