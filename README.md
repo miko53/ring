@@ -26,8 +26,22 @@ here we are the list of commands of ring:
  - ring (execute|exec) <action_name> : execute the specified action for each repo
  - ring tag <tag_name> <msg>: create tag on all repositories and push it
  - ring push : execute push on all repositories
-modifiers:
+
+ modifiers:
  -s : to simulate the command
  -v : add verbose information
  -vv : add more verbose information (debug)
+
+## how it work ? initialisation
+
+ring uses a special repository to store information about another one.
+It is declared with the command:
+ - `ring init <folder>`
+with this command, ring creates a GIT repository in `<folder>` and stores inside
+a file `ring_config` which stores all necessary information on repository.
+Moreover a file `.ring_config` is created when the command is launched and do a link
+with the `<folder>` directory
+
+Then you can use the command `register` to insert repositories to include
+
 
