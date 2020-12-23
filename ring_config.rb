@@ -50,7 +50,7 @@ class RingConfig
     @config_file.write(@config.to_yaml)
   end
 
-  def get_list_repo
+  def list_repo
     r = []
     @config['list_repo'].each do |repo|
       r << repo['name']

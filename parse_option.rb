@@ -7,6 +7,7 @@ class ParseOptionState
   GET_NEXT_ARGS = 3
   END_PARSE = 4
   PARSE_INSERT_COMMAND = 5
+  PARSE_LIST_COMMAND = 6
 end
 
 class ParseOption
@@ -36,6 +37,8 @@ class ParseOption
         opt_state, in_error = parse_create_command(opt)
       when ParseOptionState::PARSE_INSERT_COMMAND
         opt_state, in_error = parse_insert_command(opt)
+      when ParseOptionState::PARSE_LIST_COMMAND
+        opt_state, in_error = parse_list_command(opt)
       else
         in_error = true
         break
@@ -46,7 +49,7 @@ class ParseOption
     in_error
   end
 
-private
+  private
 
   def check_modifier(option)
     is_modifier = true
@@ -75,7 +78,7 @@ private
       in_error = true if @args.count < 2
     when :unregister
       in_error = true if @args.count < 1
-    when :help, :version, :list, :status, :clone, :push
+    when :help, :version, :list, :list_tag, :list_action, :status, :clone, :push
       # no special do
     when :destroy
       if @args.count < 1
@@ -132,7 +135,7 @@ private
       state = ParseOptionState::GET_NEXT_ARGS
       @command = :unregister
     when 'list'
-      state = ParseOptionState::END_PARSE
+      state = ParseOptionState::PARSE_LIST_COMMAND
       @command = :list
     when 'status'
       state = ParseOptionState::GET_NEXT_ARGS
@@ -185,6 +188,25 @@ private
     when 'action'
       @command = :insert_action
       state = ParseOptionState::GET_NEXT_ARGS
+    else
+      state = ParseOptionState::PARSE_INSERT_COMMAND
+      in_error = true
+    end
+    [state, in_error]
+  end
+
+  def parse_list_command(option)
+    in_error = false
+    case option
+    when 'action'
+      @command = :list_action
+      state = ParseOptionState::GET_NEXT_ARGS
+    when 'tag'
+      @command = :list_tag
+      state = ParseOptionState::END_PARSE
+    when 'repo'
+      @command = :list
+      state = ParseOptionState::PARSE_INSERT_COMMAND
     else
       state = ParseOptionState::PARSE_INSERT_COMMAND
       in_error = true

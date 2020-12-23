@@ -67,7 +67,7 @@ class RingCore
     end
   end
 
-  def self.perform_status(args, simulate)
+  def self.perform_status(_args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read
     return if in_error
@@ -79,7 +79,7 @@ class RingCore
     end
   end
 
-  def self.perform_clone(args, simulate)
+  def self.perform_clone(_args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read
     return if in_error
@@ -94,7 +94,7 @@ class RingCore
     Log.warning('All the data stored in repository will be DELETED ! Please check before if all have been validated and pushed')
     Log.display('Confirm (yes/NO) ?')
     confirm = $stdin.gets.chomp
-    if confirm == 'yes' || confirm == 'y'
+    if %w[yes y].include? confirm
       do_really_perform_destroy(args, simulate)
     else
       Log.display('canceled')
@@ -123,7 +123,7 @@ class RingCore
     action_selected = rconfig.config['actions'].select { |action| action['name'] == args[0] }.first
     if action_selected.nil?
       Log.error "action #{args[0]} not found"
-    elsif rconfig.get_list_repo.select { |name| name == args[1] }.count.zero?
+    elsif rconfig.list_repo.select { |name| name == args[1] }.count.zero?
       Log.error("the repo #{args[1]} doesn't exist, command not added")
     else
       insert_repo_in_repo_action(action_selected, args)
@@ -146,6 +146,28 @@ class RingCore
         CProcess.spawn(action_repo['command'], simulate)
       end
       Log.display 'done!'
+    end
+  end
+
+  def self.perform_list_action(args, _simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    list_action_repo = []
+    if args[0].nil?
+      list_action_repo = rconfig.config['actions']
+    else
+      list_action_repo = rconfig.config['actions'].select { |action| action['name'] == args[0] }
+      Log.display "action #{args[0]} not found !" if list_action_repo.count.zero?
+    end
+
+    list_action_repo.each do |action_item|
+      Log.display("action: #{action_item['name']}")
+
+      action_item['repo_action'].each do |action_repo|
+        Log.display "for #{action_repo['repo']}, command: #{action_repo['command']}"
+      end
     end
   end
 
@@ -176,7 +198,20 @@ class RingCore
     end
   end
 
-  def self.perform_push(args, simulate)
+  def self.perform_list_tag(_args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display "tags of #{repo['name']}:"
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} tag", simulate)
+      Log.error 'unable to retrieve tag list, aborted' unless r[1].zero?
+      Log.display r[0].to_s if r[1].zero?
+    end
+  end
+
+  def self.perform_push(_args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read
     return if in_error

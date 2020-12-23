@@ -3,7 +3,6 @@
 # Log class to filtrate some message
 # according to required level
 class Log
-
   def initialize
     @@verbose_level = 0
   end

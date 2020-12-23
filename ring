@@ -13,7 +13,11 @@ here we are the list of commands of ring:
         if folder is omitted, the repo will be retrieved at the current directory
         if branch is also omitted, it will be considered as default one
  - ring unregister <repo_name> : remove a repository
- - ring list : gives the list of repository managed
+ - ring list (|repo|tag|action) <action name, with action>:
+    - gives the list of repository managed (repo or no parameter)
+    - with tag, gives the list of tag of each repository
+    - with action, lists the action and command of each repositories
+        a action name can be indicated to reduce list at this action
  - ring status : give the status of all repositories inclused in the configuration
  - ring clone : allow to clone all the repostories included in the configuration
  - ring destroy all : allow to remove all cloned repositories
@@ -52,6 +56,10 @@ else
     RingCore.perform_unregister(parser.args, parser.simulate)
   when :list
     RingCore.perform_list
+  when :list_tag
+    RingCore.perform_list_tag(parser.args, parser.simulate)
+  when :list_action
+    RingCore.perform_list_action(parser.args, parser.simulate)
   when :help
     Log.display version_msg
     Log.display help_msg
