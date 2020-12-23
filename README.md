@@ -45,11 +45,25 @@ with the `<folder>` directory
 Then you can use the command `register` to insert repositories to include
 
 
-## register command
+## main command
+
+### command register
 
 `ring register <repository name> <repository url> <checkout branch> <folder where clone it>`
 
 This command declares a new repository (by including it into `ring_config` file)/
 it allows you to automatically clone it in the specified directory and checkout the right branch
 (with the `command ring clone`)
+
+### command list
+
+`ring list`
+
+Returns the list of registred repositories
+
+### command status
+
+`ring status`
+
+This command executes a `git status` on each declared repository and displays the result
 
