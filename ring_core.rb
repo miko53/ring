@@ -149,6 +149,49 @@ class RingCore
     end
   end
 
+  def self.perform_tag(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display "create tag in folder: #{repo['folder']}"
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} tag -a #{args[0]} -m \"#{args[1]}\"", simulate)
+      unless r[1].zero?
+        Log.error 'unable to create tag, aborted'
+        in_error = true
+        break
+      end
+    end
+
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display "push tag in folder: #{repo['folder']}"
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} push --follow-tag", simulate)
+      unless r[1].zero?
+        Log.error "unable to push tag for #{repo['folder']}"
+        break
+      end
+    end
+  end
+
+  def self.perform_push(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display "in folder: #{repo['folder']}"
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} push origin #{repo['branch']}", simulate)
+      unless r[1].zero?
+        Log.error 'unable to perform push, aborted'
+        in_error = true
+        break
+      end
+    end
+  end
+
   # private method list
 
   def self.default_folder_name(url)

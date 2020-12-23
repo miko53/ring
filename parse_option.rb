@@ -75,7 +75,7 @@ private
       in_error = true if @args.count < 2
     when :unregister
       in_error = true if @args.count < 1
-    when :help, :version, :list, :status, :clone
+    when :help, :version, :list, :status, :clone, :push
       # no special do
     when :destroy
       if @args.count < 1
@@ -95,6 +95,16 @@ private
     when :execute_action
       if @args.count < 1
         puts 'action is not given'
+        in_error = true
+      end
+    when :tag
+      if @args.count < 2
+        puts 'tag name and message must be specified'
+        in_error = true
+      end
+    when :commit
+      if @args.count < 1
+        puts 'commit message must be specified'
         in_error = true
       end
     else
@@ -140,6 +150,15 @@ private
     when 'execute', 'exec'
       @command = :execute_action
       state = ParseOptionState::GET_NEXT_ARGS
+    when 'tag'
+      @command = :tag
+      state = ParseOptionState::GET_NEXT_ARGS
+    when 'commit'
+      @command = :commit
+      state = ParseOptionState::GET_NEXT_ARGS
+    when 'push'
+      state = ParseOptionState::END_PARSE
+      @command = :push
     else
       state = ParseOptionState::IDLE
       in_error = true

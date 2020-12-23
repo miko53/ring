@@ -6,7 +6,7 @@ require_relative 'ring_core'
 require_relative 'log'
 
 help_msg = <<-HELP_MSG
-here we are the list of command of ring:
+here we are the list of commands of ring:
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
     - insert a new repo inside group of depot at the specifed folder
@@ -20,6 +20,8 @@ here we are the list of command of ring:
  - ring create action <action_name> : create an action
  - ring insert action <action_name> <repo_name> <commands>
  - ring (execute|exec) <action_name> : execute the specified action for each repo
+ - ring tag <tag_name> <msg>: create tag on all repositories and push it
+ - ring push : execute push on all repositories
 modifiers:
  -s : to simulate the command
  -v : add verbose information
@@ -67,5 +69,11 @@ else
     RingCore.perform_insert_action(parser.args, parser.simulate)
   when :execute_action
     RingCore.perform_execute_action(parser.args, parser.simulate)
+  when :tag
+    RingCore.perform_tag(parser.args, parser.simulate)
+  when :push
+    RingCore.perform_push(parser.args, parser.simulate)
+  when :commit
+    # not implemented
   end
 end
