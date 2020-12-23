@@ -19,7 +19,7 @@ with the `<folder>` directory
 Then you can use the command `register` to insert repositories to include
 
 
-## main commands
+## main command
 
 ### command register
 
@@ -65,6 +65,7 @@ here we are the list of commands of ring:
  - ring push : execute push on all repositories
 
  modifiers:
+
  -s : to simulate the command
  -v : add verbose information
  -vv : add more verbose information (debug)
