@@ -100,6 +100,6 @@ here we are the list of commands of ring:
 
  modifiers:
 
- - `-s` : to simulate the command
+ - `-s` : to simulate the command (usefull to know which commands will be launched)
  - `-v` : add verbose information
  - `-vv` : add more verbose information (debug)
