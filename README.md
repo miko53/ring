@@ -68,6 +68,8 @@ Where the <action_name> is the action previously registered, the <repo_name> the
 
 ### command execute 
 
+The most important command is the execute, it permits to launch the previously registered actions on each repository. The command is the following:
+- `ring execute action <action_name>`
 
 ## miscellaneous commands
 
@@ -98,6 +100,6 @@ here we are the list of commands of ring:
 
  modifiers:
 
- -s : to simulate the command
- -v : add verbose information
- -vv : add more verbose information (debug)
+ - `-s` : to simulate the command
+ - `-v` : add verbose information
+ - `-vv` : add more verbose information (debug)
