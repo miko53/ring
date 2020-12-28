@@ -64,6 +64,7 @@ An action is inserted by applying the command `ring create action <action_name>`
 
 By this command, a action is associated to an executable to be applied. The command is the following:
  - `ring insert action <action_name> <repo_name> <command>`
+
 Where the <action_name> is the action previously registered, the <repo_name> the name of the command where the command must be executed
 
 ### command execute
@@ -74,8 +75,8 @@ The most important command is the execute, it permits to launch the previously r
 ## miscellaneous commands
 
 Another command are provided for example :
- - unregister: for remove a repository from the list
- - list: list can also given the list of tag on each repositories or the list of configurated action
+ - `unregister` for remove a repository from the list
+ - `list` list can also given the list of tag on each repositories or the list of configurated action
 
 ### command destroy
 
@@ -84,7 +85,7 @@ This command is a little bit dangerous, with it, you can remove all previously c
 
 ### command tag
 
-This command is used to create a tag and propagate it on all registered repositories.
+This command is used to create a tag (`git tag -a`)and propagate it on all registered repositories.
 The tag is created on the head of each repositories.
 
 ### command push
