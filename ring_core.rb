@@ -27,6 +27,23 @@ class RingCore
     end
   end
 
+  def self.perform_get(args, simulate)
+    r = CProcess.execute("git clone --recursive #{args[0]} #{args[1]}", simulate)
+    if simulate == true
+      Log.display "create link file(#{LINK_FILENAME})"
+      return true
+    end
+
+    if r[1].zero?
+      args[1].nil? ? default_folder = default_folder_name(args[0]) : default_folder = args[1]
+      config = RingConfig.new
+      status = config.create_link_file(default_folder)
+      Log.display 'get correctly done' if status == true
+    else
+      Log.display 'get failed !'
+    end
+  end
+
   def self.perform_register(args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read
@@ -231,7 +248,7 @@ class RingCore
 
   def self.default_folder_name(url)
     last_name = url.split('/').last
-    last_name.chomp!('.git')
+    last_name.chomp('.git')
   end
 
   def self.repo_unique?(config, repo_name, repo_folder)

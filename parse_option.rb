@@ -110,6 +110,11 @@ class ParseOption
         puts 'commit message must be specified'
         in_error = true
       end
+    when :get
+      if @args.count < 1
+        puts 'url must be given for get command'
+        in_error = true
+      end
     else
       in_error = true
     end
@@ -162,6 +167,9 @@ class ParseOption
     when 'push'
       state = ParseOptionState::END_PARSE
       @command = :push
+    when 'get'
+      @command = :get
+      state = ParseOptionState::GET_NEXT_ARGS
     else
       state = ParseOptionState::IDLE
       in_error = true

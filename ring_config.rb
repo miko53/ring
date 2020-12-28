@@ -24,6 +24,10 @@ class RingConfig
     file.write(@config.to_yaml)
     file.close
 
+    create_link_file(root_folder)
+  end
+
+  def create_link_file(root_folder)
     @link_config['redirect_link'] = "#{root_folder}/" + CONFIG_FILENAME
     file = File.open(LINK_FILENAME, 'w')
     file.write(@link_config.to_yaml)

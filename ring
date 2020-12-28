@@ -84,5 +84,7 @@ else
     RingCore.perform_push(parser.args, parser.simulate)
   when :commit
     # not implemented
+  when :get
+    RingCore.perform_get(parser.args, parser.simulate)
   end
 end
