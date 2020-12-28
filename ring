@@ -7,6 +7,7 @@ require_relative 'log'
 
 help_msg = <<-HELP_MSG
 here we are the list of commands of ring:
+ - ring get <url> : retrieve ring configuration
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
     - insert a new repo inside group of depot at the specifed folder

@@ -53,7 +53,7 @@ It is probably the second command after the `ring get` one
 ## command to manage actions
 
 the action commands can be used to group into one command, several commands to be executed on repository.
-For example, an action 'make' can be created to launch a `make <app1>` on one repository but call a `make <app2>` 
+For example, an action 'make' can be created to launch a `make <app1>` on one repository but call a `make <app2>`
 on a second one.
 
 ### command create action
@@ -66,18 +66,36 @@ By this command, a action is associated to an executable to be applied. The comm
  - `ring insert action <action_name> <repo_name> <command>`
 Where the <action_name> is the action previously registered, the <repo_name> the name of the command where the command must be executed
 
-### command execute 
+### command execute
 
 The most important command is the execute, it permits to launch the previously registered actions on each repository. The command is the following:
 - `ring execute action <action_name>`
 
 ## miscellaneous commands
 
+Another command are provided for example :
+ - unregister: for remove a repository from the list
+ - list: list can also given the list of tag on each repositories or the list of configurated action
+
+### command destroy
+
+This command is a little bit dangerous, with it, you can remove all previously cloned repositories.
+- `ring destroy all`
+
+### command tag
+
+This command is used to create a tag and propagate it on all registered repositories.
+The tag is created on the head of each repositories.
+
+### command push
+
+In a similar way that for tag, this command push all commit of declared branchs.
 
 ## list of commands
 
 
 here we are the list of commands of ring:
+ - ring get <url> : retrieve the iring configuration
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
     - insert a new repo inside group of depot at the specifed folder
