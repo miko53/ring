@@ -18,6 +18,13 @@ with the `<folder>` directory
 
 Then you can use the command `register` to insert repositories to include
 
+When the configuration has already been created, the following command permit to retreive
+it:
+ - `ring get <url>` 
+ with `url` the GIT repository which stores them.
+This command does a clone of repository given by url in the current working directory.
+These repository must contains the `ring_config` file. In addition, the command creates the 
+`.ring_config` and link to the given repository
 
 ## main command
 
@@ -96,7 +103,7 @@ In a similar way that for tag, this command push all commit of declared branchs.
 
 
 here we are the list of commands of ring:
- - ring get <url> : retrieve the iring configuration
+ - ring get <url> : retrieve the ring configuration
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
     - insert a new repo inside group of depot at the specifed folder
