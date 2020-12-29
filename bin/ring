@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'parse_option'
-require_relative 'ring_core'
-require_relative 'log'
+require_relative 'lib/parse_option'
+require_relative 'lib/ring_core'
+require_relative 'lib/log'
 
 help_msg = <<-HELP_MSG
 here we are the list of commands of ring:
