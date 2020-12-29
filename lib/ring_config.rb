@@ -5,7 +5,7 @@ require_relative 'log'
 
 CONFIG_FILENAME = 'ring_config'
 LINK_FILENAME = '.ring_config'
-CONFIG_VERSION = '1.0.0'
+CONFIG_VERSION = '0.0.1'
 
 class RingConfig
   attr_accessor :config

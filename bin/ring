@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative 'lib/parse_option'
-require_relative 'lib/ring_core'
-require_relative 'lib/log'
+require_relative '../lib/parse_option'
+require_relative '../lib/ring_core'
+require_relative '../lib/log'
 
 help_msg = <<-HELP_MSG
 here we are the list of commands of ring:
@@ -33,7 +33,7 @@ modifiers:
  -vv : add more verbose information (debug)
 HELP_MSG
 
-version_msg = 'ring version 0.1'
+version_msg = 'ring version 0.0.1'
 
 parser = ParseOption.new
 in_error = parser.parse_option(ARGV)
