@@ -115,6 +115,11 @@ class ParseOption
         puts 'url must be given for get command'
         in_error = true
       end
+    when :checkout_tag
+      if @args.count < 1
+        puts 'tag name must be given'
+        in_error = true
+      end
     else
       in_error = true
     end
@@ -169,6 +174,9 @@ class ParseOption
       @command = :push
     when 'get'
       @command = :get
+      state = ParseOptionState::GET_NEXT_ARGS
+    when 'checkout'
+      @command = :checkout_tag
       state = ParseOptionState::GET_NEXT_ARGS
     else
       state = ParseOptionState::IDLE

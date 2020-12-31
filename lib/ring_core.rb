@@ -215,6 +215,22 @@ class RingCore
     end
   end
 
+  def self.perform_checkout_tag(args, simulate)
+    rconfig = RingConfig.new
+    in_error = rconfig.read
+    return if in_error
+
+    rconfig.config['list_repo'].each do |repo|
+      Log.display "checkout tag #{args[0]} for #{repo['folder']}"
+      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} checkout #{args[0]} && #{GIT_EXEC} submodule update", simulate)
+      unless r[1].zero?
+        Log.error 'unable to checkout tag'
+        in_error = true
+        break
+      end
+    end
+  end
+
   def self.perform_list_tag(_args, simulate)
     rconfig = RingConfig.new
     in_error = rconfig.read

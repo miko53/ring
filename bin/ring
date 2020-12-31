@@ -26,6 +26,7 @@ here we are the list of commands of ring:
  - ring insert action <action_name> <repo_name> <commands>
  - ring (execute|exec) <action_name> : execute the specified action for each repo
  - ring tag <tag_name> <msg>: create tag on all repositories and push it
+ - ring checkout <tag_name>|<branch_name : retrieve all repositories on this tag or branch
  - ring push : execute push on all repositories
 modifiers:
  -s : to simulate the command
@@ -86,5 +87,7 @@ else
     # not implemented
   when :get
     RingCore.perform_get(parser.args, parser.simulate)
+  when :checkout_tag
+    RingCore.perform_checkout_tag(parser.args, parser.simulate)
   end
 end
