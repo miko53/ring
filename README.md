@@ -20,10 +20,10 @@ Then you can use the command `register` to insert repositories to include
 
 When the configuration has already been created, the following command permit to retreive
 it:
- - `ring get <url>` 
+ - `ring get <url>`
  with `url` the GIT repository which stores them.
 This command does a clone of repository given by url in the current working directory.
-These repository must contains the `ring_config` file. In addition, the command creates the 
+These repository must contains the `ring_config` file. In addition, the command creates the
 `.ring_config` and link to the given repository
 
 ## main command
@@ -95,18 +95,22 @@ This command is a little bit dangerous, with it, you can remove all previously c
 This command is used to create a tag (`git tag -a`)and propagate it on all registered repositories.
 The tag is created on the head of each repositories.
 
+### command checkout
+
+This command can be used to checkout whole repositories on a specified tag (or branch).
+It updates also sub-module.
+
 ### command push
 
 In a similar way that for tag, this command push all commit of declared branchs.
 
 ## list of commands
 
-
 here we are the list of commands of ring:
  - ring get <url> : retrieve the ring configuration
  - ring init <folder> : create a new repo organization
  - ring register <name> <url> <branch> <folder> :
-    - insert a new repo inside group of depot at the specifed folder
+    - insert a new repo inside group of depot at the specified folder
         if folder is omitted, the repo will be retrieved at the current directory
         if branch is also omitted, it will be considered as default one
  - ring unregister <repo_name> : remove a repository
@@ -122,6 +126,7 @@ here we are the list of commands of ring:
  - ring insert action <action_name> <repo_name> <commands>
  - ring (execute|exec) <action_name> : execute the specified action for each repo
  - ring tag <tag_name> <msg>: create tag on all repositories and push it
+ - ring checkout <tag_name>|<branch_name : retrieve all repositories on this tag or branch
  - ring push : execute push on all repositories
 
  modifiers:
