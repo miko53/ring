@@ -3,9 +3,7 @@
 # Log class to filtrate some message
 # according to required level
 class Log
-  def initialize
-    @@verbose_level = 0
-  end
+  @@verbose_level = 0
 
   def self.error(msg)
     puts "error: #{msg}"
