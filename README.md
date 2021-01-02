@@ -6,7 +6,7 @@ need to group them to produce a more large software.
 
 This tool can help to manage whole GIT repository
 
-## how it work ? initialisation
+## How it work ? initialisation
 
 ring uses a special repository to store information about another one.
 It is declared with the command:
@@ -26,7 +26,7 @@ This command does a clone of repository given by url in the current working dire
 These repository must contains the `ring_config` file. In addition, the command creates the
 `.ring_config` and link to the given repository
 
-## installation
+## Installation
 
 build the gem
  - `gem build ring.gemspec`
@@ -36,9 +36,13 @@ and install it
 
 otherwise if you don't want it, you can source the bin directory to try. `export PATH=<bin folder>:$PATH`
 
+## Example
+
+TODO 
+
 ## main command
 
-### command register
+### Command register
 
 `ring register <repository name> <repository url> <checkout branch> <folder where clone it>`
 
@@ -47,19 +51,19 @@ it allows you to automatically clone it in the specified directory and checkout 
 (with the `command ring clone`).
 The folder is given in reference to the `.ring_config` file.
 
-### command list
+### Command list
 
 `ring list`
 
 Returns the list of registred repositories
 
-### command status
+### Command status
 
 `ring status`
 
 This command executes a `git status` on each declared repository and displays the result.
 
-### command clone
+### Command clone
 
 `ring clone`
 With this command you can retrieve all the registered repositories listed in the configuration file.
@@ -67,54 +71,54 @@ By executing the `git clone` command.
 
 It is probably the second command after the `ring get` one
 
-## command to manage actions
+## Command to manage actions
 
 the action commands can be used to group into one command, several commands to be executed on repository.
 For example, an action 'make' can be created to launch a `make <app1>` on one repository but call a `make <app2>`
 on a second one.
 
-### command create action
+### Command create action
 
 An action is inserted by applying the command `ring create action <action_name>`. This call just register the command into the configuration file
 
-### command insert action
+### Command insert action
 
 By this command, a action is associated to an executable to be applied. The command is the following:
  - `ring insert action <action_name> <repo_name> <command>`
 
 Where the <action_name> is the action previously registered, the <repo_name> the name of the command where the command must be executed
 
-### command execute
+### Command execute
 
 The most important command is the execute, it permits to launch the previously registered actions on each repository. The command is the following:
 - `ring execute action <action_name>`
 
-## miscellaneous commands
+## Miscellaneous commands
 
 Another command are provided for example :
  - `unregister` for remove a repository from the list
  - `list` list can also given the list of tag on each repositories or the list of configurated action
 
-### command destroy
+### Command destroy
 
 This command is a little bit dangerous, with it, you can remove all previously cloned repositories.
 - `ring destroy all`
 
-### command tag
+### Command tag
 
-This command is used to create a tag (`git tag -a`)and propagate it on all registered repositories.
+This command is used to create a tag (`git tag -a`) and propagate it on all registered repositories.
 The tag is created on the head of each repositories.
 
-### command checkout
+### Command checkout
 
 This command can be used to checkout whole repositories on a specified tag (or branch).
 It updates also sub-module.
 
-### command push
+### Command push
 
 In a similar way that for tag, this command push all commit of declared branchs.
 
-## list of commands
+## List of commands
 
 here we are the list of commands of ring:
  - ring get <url> : retrieve the ring configuration
