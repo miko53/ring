@@ -104,6 +104,17 @@ It updates also sub-module.
 
 In a similar way that for tag, this command push all commit of declared branchs.
 
+## installation
+
+build the gem
+ - `gem build ring.gemspec`
+
+and install it
+ - `sudo gem install ring-0.0.1.gem`
+
+otherwise if you don't want it, you can source the bin directory to try. `export PATH=<bin folder>:$PATH`
+
+
 ## list of commands
 
 here we are the list of commands of ring:
