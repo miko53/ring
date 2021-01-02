@@ -38,7 +38,60 @@ otherwise if you don't want it, you can source the bin directory to try. `export
 
 ## Example
 
-TODO 
+Example of retrievable (repositories in folder, no action specified:
+
+```
+miko53@F2003-GA:~/programmation/temp/test_get  $ ll
+total 0
+miko53@F2003-GA:~/programmation/temp/test_get  $ ring get ../test_ring/script/
+Clonage dans 'script'...
+fait.
+get correctly done
+miko53@F2003-GA:~/programmation/temp/test_get  $ ring clone
+
+in repo/repo_3:
+Clonage dans 'repo/repo_3'...
+fait.
+
+in repo/repo_2:
+Clonage dans 'repo/repo_2'...
+fait.
+
+in repo_4:
+Clonage dans 'repo_4'...
+fait.
+miko53@F2003-GA:~/programmation/temp/test_get  $ tree
+.
+├── repo
+│   ├── repo_2
+│   │   └── REPO2.md
+│   └── repo_3
+│       ├── main.c
+│       └── REPO_3.md
+├── repo_4
+│   └── REPO_4.md
+└── script
+    └── ring_config
+
+5 directories, 5 files
+miko53@F2003-GA:~/programmation/temp/test_get  $ cat script/ring_config 
+---
+version: 0.0.1
+list_repo:
+- name: repo_3
+  url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_3"
+  branch: master
+  folder: repo/repo_3
+- name: repo_2
+  url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_2"
+  branch: master
+  folder: repo/repo_2
+- name: repo_4
+  url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_4.git"
+  branch: master
+  folder: repo_4
+actions: []
+```
 
 ## Main command
 
