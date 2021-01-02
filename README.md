@@ -26,6 +26,16 @@ This command does a clone of repository given by url in the current working dire
 These repository must contains the `ring_config` file. In addition, the command creates the
 `.ring_config` and link to the given repository
 
+## installation
+
+build the gem
+ - `gem build ring.gemspec`
+
+and install it
+ - `sudo gem install ring-0.0.1.gem`
+
+otherwise if you don't want it, you can source the bin directory to try. `export PATH=<bin folder>:$PATH`
+
 ## main command
 
 ### command register
@@ -103,17 +113,6 @@ It updates also sub-module.
 ### command push
 
 In a similar way that for tag, this command push all commit of declared branchs.
-
-## installation
-
-build the gem
- - `gem build ring.gemspec`
-
-and install it
- - `sudo gem install ring-0.0.1.gem`
-
-otherwise if you don't want it, you can source the bin directory to try. `export PATH=<bin folder>:$PATH`
-
 
 ## list of commands
 
