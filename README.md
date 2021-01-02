@@ -40,7 +40,7 @@ otherwise if you don't want it, you can source the bin directory to try. `export
 
 TODO 
 
-## main command
+## Main command
 
 ### Command register
 
