@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'byebug'
 require_relative 'ring_config'
 require_relative 'process'
 require_relative 'log'
@@ -160,10 +159,15 @@ class RingCore
     else
       action_to_perform['repo_action'].each do |action_repo|
         Log.display "in repo #{action_repo['repo']}:"
-        CProcess.spawn(action_repo['command'], simulate)
+        repo = repo(rconfig, action_repo['repo'])
+        CProcess.spawn("cd #{repo['folder']} && #{action_repo['command']}", simulate)
       end
       Log.display 'done!'
     end
+  end
+  
+  def self.repo(rconfig, repo_name)
+    rconfig.config['list_repo'].select { |repo| repo['name'] == repo_name}.first
   end
 
   def self.perform_list_action(args, _simulate)
