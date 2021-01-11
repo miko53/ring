@@ -93,6 +93,10 @@ class RingCore
       r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} status", simulate)
       Log.display(r[0])
     end
+
+    Log.display("\nin #{rconfig.config_folder}:")
+    r = CProcess.execute("cd #{rconfig.config_folder} && #{GIT_EXEC} status", simulate)
+    Log.display(r[0])
   end
 
   def self.perform_clone(_args, simulate)

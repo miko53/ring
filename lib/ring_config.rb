@@ -62,6 +62,10 @@ class RingConfig
     r
   end
 
+  def config_folder
+    File.dirname(@link_config['redirect_link'])
+  end
+
   private
 
   def search_ring_link_file
