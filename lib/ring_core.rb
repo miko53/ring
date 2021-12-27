@@ -7,9 +7,30 @@ require_relative 'log'
 GIT_EXEC = 'git'
 
 class RingCore
+
+  def self.get_scm(args)
+    if args.count >= 3
+      return nil unless args[args.count-2] == "with"
+      case args[args.count-1]
+      when 'git','hg'
+        return args[args.count-1]
+      else
+        Log.display 'wrong scm, should be \'git\' or \'hg\''
+        return nil
+      end
+    else
+      return "git" 
+    end
+  end
+
   def self.perform_initialize(args, simulate)
+
+    #p get_scm(args)
+    scm = get_scm(args)
+    return if scm.nil?
+
     r = CProcess.execute("mkdir #{args[0]}", simulate)
-    r = CProcess.execute("cd #{args[0]} && #{GIT_EXEC} init", simulate) if r[1].zero?
+    r = CProcess.execute("cd #{args[0]} && #{scm} init", simulate) if r[1].zero?
 
     if simulate == true
       Log.display "create link file(#{LINK_FILENAME})"
@@ -19,7 +40,7 @@ class RingCore
 
     if r[1].zero?
       config = RingConfig.new
-      status = config.create(args[0])
+      status = config.create(args[0], scm)
       Log.display 'initialize done successfully !' if status == true
     else
       Log.display 'initialize failed !'
@@ -94,8 +115,8 @@ class RingCore
       Log.display(r[0])
     end
 
-    Log.display("\nin #{rconfig.config_folder}:")
-    r = CProcess.execute("cd #{rconfig.config_folder} && #{GIT_EXEC} status", simulate)
+    Log.display("\nin #{rconfig.config_folder}: (#{rconfig.scm})")
+    r = CProcess.execute("cd #{rconfig.config_folder} && #{rconfig.scm} status", simulate)
     Log.display(r[0])
   end
 

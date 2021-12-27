@@ -5,7 +5,7 @@ require_relative 'log'
 
 CONFIG_FILENAME = 'ring_config'
 LINK_FILENAME = '.ring_config'
-CONFIG_VERSION = '0.0.1'
+CONFIG_VERSION = '0.0.2'
 
 class RingConfig
   attr_accessor :config
@@ -19,7 +19,8 @@ class RingConfig
     @config['actions'] = []
   end
 
-  def create(root_folder)
+  def create(root_folder, scm)
+    @config['scm'] = scm
     file = File.open("#{root_folder}/" + CONFIG_FILENAME, 'w')
     file.write(@config.to_yaml)
     file.close
@@ -64,6 +65,10 @@ class RingConfig
 
   def config_folder
     File.dirname(@link_config['redirect_link'])
+  end
+
+  def scm
+    return @config['scm']
   end
 
   private
