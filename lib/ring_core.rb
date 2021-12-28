@@ -111,8 +111,8 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}:")
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} status", simulate)
+      Log.display("\nin #{repo['folder']}: (#{rconfig.scm})")
+      r = CProcess.execute("cd #{repo['folder']} && #{repo['scm']} status", simulate)
       Log.display(r[0])
     end
 
@@ -127,8 +127,15 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}:")
-      CProcess.execute("#{GIT_EXEC} clone --recursive #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+      Log.display("\nin #{repo['folder']}: (#{rconfig.scm})")
+      case rconfig.scm
+      when 'git'
+        CProcess.execute("#{GIT_EXEC} clone --recursive #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+      when 'hg'
+        CProcess.execute("hg clone #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+      else
+        Log.display('not possible')
+      end
     end
   end
 
