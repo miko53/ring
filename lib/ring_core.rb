@@ -72,13 +72,14 @@ class RingCore
     if repo_unique?(rconfig.config, args[0], args[3]) == true
 
       # set default value branch and folder when no precised
-      args[2] = 'master' if args[2].nil?
-      args[3] = default_folder_name(args[1]) if args[3].nil?
-      rconfig.config['list_repo'] << { 'name' => args[0], 'url' => args[1], 'branch' => args[2], 'folder' => args[3] }
+      args[3] = 'master' if args[3].nil? && args[1] == 'git'
+      args[3] = 'default' if args[3].nil? && args[1] == 'hg'
+      args[4] = default_folder_name(args[2]) if args[4].nil?
+      rconfig.config['list_repo'] << { 'name' => args[0], 'scm' => args[1], 'url' => args[2], 'branch' => args[3], 'folder' => args[4] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
     else
-      Log.display "repository #{args[0]} or located at #{args[3]} already exists, it can not be added a second one"
+      Log.display "repository #{args[0]} or located at #{args[4]} already exists, it can not be added a second one"
     end
   end
 

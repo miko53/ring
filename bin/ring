@@ -9,10 +9,11 @@ help_msg = <<-HELP_MSG
 here we are the list of commands of ring:
  - ring get <url> : retrieve ring configuration
  - ring init <folder> (with <scm>): create a new repo organization optional with precize scm (git or hg)
- - ring register <name> <url> <branch> <folder> :
-    - insert a new repo inside group of depot at the specifed folder
-        if folder is omitted, the repo will be retrieved at the current directory
-        if branch is also omitted, it will be considered as default one
+ - ring register <name> <scm> <url> <branch> <folder> :
+    - insert a new repo inside a group of repo at the specifed folder
+        <scm> indicate type of repository ('hg' or 'git' supported)
+        if <folder> is omitted, the repo will be retrieved at the current directory
+        if <branch> is also omitted, it will be considered as default one
  - ring unregister <repo_name> : remove a repository
  - ring list (|repo|tag|action) <action name, with action>:
     - gives the list of repository managed (repo or no parameter)

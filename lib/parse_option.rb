@@ -75,7 +75,8 @@ class ParseOption
         in_error = true
       end
     when :register
-      in_error = true if @args.count < 2
+      in_error = true if @args.count < 3
+      in_error = true unless @args[1] == "git" || @args[1] == "hg"
     when :unregister
       in_error = true if @args.count < 1
     when :help, :version, :list, :list_tag, :list_action, :status, :clone, :push
