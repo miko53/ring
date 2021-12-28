@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'ring_config'
+require_relative 'ring_scm'
 require_relative 'process'
 require_relative 'log'
 
@@ -111,9 +112,9 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}: (#{rconfig.scm})")
-      r = CProcess.execute("cd #{repo['folder']} && #{repo['scm']} status", simulate)
-      Log.display(r[0])
+      Log.display("\nin #{repo['folder']}: (#{repo['scm']})")
+      scm_obj = allocate_scm(repo['scm'])
+      scm_obj.status(repo, simulate)
     end
 
     Log.display("\nin #{rconfig.config_folder}: (#{rconfig.scm})")
@@ -127,15 +128,9 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}: (#{rconfig.scm})")
-      case rconfig.scm
-      when 'git'
-        CProcess.execute("#{GIT_EXEC} clone --recursive #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
-      when 'hg'
-        CProcess.execute("hg clone #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
-      else
-        Log.display('not possible')
-      end
+      Log.display("\nin #{repo['folder']}: (#{repo['scm']})")
+      scm_obj = allocate_scm(repo['scm'])
+      scm_obj.clone(repo, simulate)
     end
   end
 
@@ -338,7 +333,20 @@ class RingCore
     end
   end
 
+  def self.allocate_scm(scm)
+    scm_obj = nil
+    case scm
+    when 'git'
+      scm_obj= RingScmGit.new
+    when 'hg'
+      scm_obj = RingScmHg.new
+    else
+      raise ImplementationError
+    end
+    scm_obj
+  end
+
   private_class_method :default_folder_name, :repo_unique?
   private_class_method :do_really_perform_destroy, :action_already_exists?
-  private_class_method :insert_repo_in_repo_action
+  private_class_method :insert_repo_in_repo_action, :allocate_scm
 end
