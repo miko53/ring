@@ -5,8 +5,6 @@ require_relative 'ring_scm'
 require_relative 'process'
 require_relative 'log'
 
-GIT_EXEC = 'git'
-
 class RingCore
 
   def self.get_scm(args)
@@ -49,14 +47,17 @@ class RingCore
   end
 
   def self.perform_get(args, simulate)
-    r = CProcess.execute("git clone --recursive #{args[0]} #{args[1]}", simulate)
+    scm_obj = allocate_scm(args[0])
+    return if scm_obj.nil?
+
+    in_error = scm_obj.get(args[1], args[2], simulate)
     if simulate == true
       Log.display "create link file(#{LINK_FILENAME})"
       return true
     end
 
-    if r[1].zero?
-      args[1].nil? ? default_folder = default_folder_name(args[0]) : default_folder = args[1]
+    if !in_error
+      args[1].nil? ? default_folder = default_folder_name(args[1]) : default_folder = args[2]
       config = RingConfig.new
       status = config.create_link_file(default_folder)
       Log.display 'get correctly done' if status == true
@@ -227,23 +228,18 @@ class RingCore
 
     rconfig.config['list_repo'].each do |repo|
       Log.display "create tag in folder: #{repo['folder']}"
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} tag -a #{args[0]} -m \"#{args[1]}\"", simulate)
-      unless r[1].zero?
-        Log.error 'unable to create tag, aborted'
-        in_error = true
-        break
-      end
+      scm_obj = allocate_scm(repo['scm'])
+      in_error = scm_obj.tag(repo, args[0], args[1], simulate)
+      break if in_error
     end
 
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
       Log.display "push tag in folder: #{repo['folder']}"
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} push --follow-tag", simulate)
-      unless r[1].zero?
-        Log.error "unable to push tag for #{repo['folder']}"
-        break
-      end
+      scm_obj = allocate_scm(repo['scm'])
+      in_error = scm_obj.push(repo, true, simulate)
+      break if in_error
     end
   end
 
@@ -254,12 +250,9 @@ class RingCore
 
     rconfig.config['list_repo'].each do |repo|
       Log.display "checkout tag #{args[0]} for #{repo['folder']}"
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} checkout #{args[0]} && #{GIT_EXEC} submodule update", simulate)
-      unless r[1].zero?
-        Log.error 'unable to checkout tag'
-        in_error = true
-        break
-      end
+      scm_obj = allocate_scm(repo['scm'])
+      in_error = scm_obj.checkout(repo, args[0], simulate)
+      break if in_error
     end
   end
 
@@ -270,9 +263,9 @@ class RingCore
 
     rconfig.config['list_repo'].each do |repo|
       Log.display "tags of #{repo['name']}:"
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} tag", simulate)
-      Log.error 'unable to retrieve tag list, aborted' unless r[1].zero?
-      Log.display r[0].to_s if r[1].zero?
+      scm_obj = allocate_scm(repo['scm'])
+      in_error = scm_obj.list_tag(repo, simulate)
+      break if in_error
     end
   end
 
@@ -283,12 +276,8 @@ class RingCore
 
     rconfig.config['list_repo'].each do |repo|
       Log.display "in folder: #{repo['folder']}"
-      r = CProcess.execute("cd #{repo['folder']} && #{GIT_EXEC} push origin #{repo['branch']}", simulate)
-      unless r[1].zero?
-        Log.error 'unable to perform push, aborted'
-        in_error = true
-        break
-      end
+      scm_obj = allocate_scm(repo['scm'])
+      scm_obj.push(repo, false, simulate)
     end
   end
 

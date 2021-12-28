@@ -112,10 +112,11 @@ class ParseOption
         in_error = true
       end
     when :get
-      if @args.count < 1
-        puts 'url must be given for get command'
+      if @args.count < 2
+        puts 'scm, url must be given for get command'
         in_error = true
       end
+      in_error = true unless @args[0] == "git" || @args[0] == "hg"
     when :checkout_tag
       if @args.count < 1
         puts 'tag name must be given'
