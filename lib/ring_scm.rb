@@ -6,7 +6,7 @@ class RingScmGit
 
     def status(repo, simulate)
         r = CProcess.execute("cd #{repo['folder']} && git status", simulate)
-        Log.display(r[0])        
+        Log.display(r[0])
     end
 
     def get(url, folder, simulate)
@@ -46,7 +46,7 @@ class RingScmGit
             unless r[1].zero?
               Log.error 'unable to perform push, aborted'
               in_error = true
-            end      
+            end
         end
         in_error
     end
@@ -57,8 +57,8 @@ class RingScmGit
         unless r[1].zero?
           Log.error 'unable to checkout tag'
           in_error = true
-        end  
-        in_error      
+        end
+        in_error
     end
 
     def list_tag(repo, simulate)
@@ -73,10 +73,10 @@ class RingScmHg
 
     def status(repo, simulate)
         r = CProcess.execute("cd #{repo['folder']} && hg branch", simulate)
-        Log.display("In branch #{r[0]}") 
+        Log.display("In branch #{r[0]}") if r[1].zero?
         r = CProcess.execute("cd #{repo['folder']} && hg status", simulate)
-        Log.display(r[0].to_s) unless r[0].empty?
-        Log.display("Your branch is up-to-date") if r[0].empty?
+        Log.display(r[0].to_s) unless r[0].empty? && r[1].zero?
+        Log.display("Your branch is up-to-date") if r[0].empty? && r[1].zero?
     end
 
     def get(url, folder, simulate)
@@ -90,7 +90,9 @@ class RingScmHg
     end
 
     def clone(repo, simulate)
-        CProcess.execute("hg clone #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+        r = CProcess.execute("hg clone #{repo['url']} --branch #{repo['branch']} #{repo['folder']}", simulate)
+        Log.display("Clone in '#{repo['folder']}'") if r[1].zero?
+        Log.display("Done") if r[1].zero?
     end
 
     def tag(repo, tag_name, msg, simulate)

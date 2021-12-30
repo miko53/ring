@@ -3,6 +3,7 @@
 # Log class to filtrate some message
 # according to required level
 class Log
+
   def initialize
     @@verbose_level = 0
   end
@@ -15,8 +16,10 @@ class Log
     puts "warning: #{msg}"
   end
 
-  def self.display(msg)
+  def self.display(msg, color = :default)
+    colorize(color) unless color == :default
     puts msg
+    uncolorize(color) unless color == :default
   end
 
   def self.info(msg)
@@ -34,4 +37,21 @@ class Log
   def self.verbose_level
     @@verbose_level
   end
+
+  def self.colorize(color)
+    case color
+    when :red
+      puts "\e[31m"
+    when :green
+      puts "\e[32m"
+    else
+    end
+  end
+
+  def self.uncolorize(color)
+    puts "\e[0m"
+  end
+
+  private_class_method :colorize, :uncolorize
+
 end

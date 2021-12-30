@@ -18,7 +18,7 @@ class RingCore
         return nil
       end
     else
-      return "git" 
+      return "git"
     end
   end
 
@@ -113,12 +113,12 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}: (#{repo['scm']})")
+      Log.display("in #{repo['folder']}: (#{repo['scm']})", :green)
       scm_obj = allocate_scm(repo['scm'])
       scm_obj.status(repo, simulate)
     end
 
-    Log.display("\nin #{rconfig.config_folder}: (#{rconfig.scm})")
+    Log.display("in #{rconfig.config_folder}: (#{rconfig.scm})", :green)
     r = CProcess.execute("cd #{rconfig.config_folder} && #{rconfig.scm} status", simulate)
     Log.display(r[0])
   end
@@ -129,7 +129,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display("\nin #{repo['folder']}: (#{repo['scm']})")
+      Log.display("in #{repo['folder']}: (#{repo['scm']})", :green)
       scm_obj = allocate_scm(repo['scm'])
       scm_obj.clone(repo, simulate)
     end
@@ -194,7 +194,7 @@ class RingCore
       Log.display 'done!'
     end
   end
-  
+
   def self.repo(rconfig, repo_name)
     rconfig.config['list_repo'].select { |repo| repo['name'] == repo_name}.first
   end
@@ -227,7 +227,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display "create tag in folder: #{repo['folder']}"
+      Log.display("create tag in folder: #{repo['folder']}", :green)
       scm_obj = allocate_scm(repo['scm'])
       in_error = scm_obj.tag(repo, args[0], args[1], simulate)
       break if in_error
@@ -236,7 +236,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display "push tag in folder: #{repo['folder']}"
+      Log.display("push tag in folder: #{repo['folder']}", :green)
       scm_obj = allocate_scm(repo['scm'])
       in_error = scm_obj.push(repo, true, simulate)
       break if in_error
@@ -249,7 +249,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display "checkout tag #{args[0]} for #{repo['folder']}"
+      Log.display("checkout tag #{args[0]} for #{repo['folder']}", :green)
       scm_obj = allocate_scm(repo['scm'])
       in_error = scm_obj.checkout(repo, args[0], simulate)
       break if in_error
@@ -262,7 +262,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display "tags of #{repo['name']}:"
+      Log.display("tags of #{repo['name']}:", :green)
       scm_obj = allocate_scm(repo['scm'])
       in_error = scm_obj.list_tag(repo, simulate)
       break if in_error
@@ -275,7 +275,7 @@ class RingCore
     return if in_error
 
     rconfig.config['list_repo'].each do |repo|
-      Log.display "in folder: #{repo['folder']}"
+      Log.display("in folder: #{repo['folder']}", :green)
       scm_obj = allocate_scm(repo['scm'])
       scm_obj.push(repo, false, simulate)
     end
@@ -300,7 +300,7 @@ class RingCore
 
     rconfig.config['list_repo'].each do |repo|
       if args[0] == 'all' || (repo['name'] =~ Regexp.new(args[0]))
-        Log.display("in #{repo['folder']}")
+        Log.display("in #{repo['folder']}", :green)
         CProcess.execute("rm -rf #{repo['folder']}", simulate)
       end
     end
