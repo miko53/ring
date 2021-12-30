@@ -1,10 +1,10 @@
 # ring
 
-This tool can be used to manage several GIT repository.
+This tool can be used to manage several repository (git or mercurial).
 Most of time, large projet uses multiple repository and
 need to group them to produce a more large software.
 
-This tool can help to manage whole GIT repository
+This tool can help to manage whole git/mercurial (or mixed) repository.
 
 ## How it work ? initialisation
 
@@ -20,8 +20,9 @@ Then you can use the command `register` to insert repositories to include
 
 When the configuration has already been created, the following command permit to retreive
 it:
- - `ring get <url>`
- with `url` the GIT repository which stores them.
+ - `ring get <scm> <url>`
+ with `url` the repository where stores them.
+ with `scm` the configuration tool used to store them
 This command does a clone of repository given by url in the current working directory.
 These repository must contains the `ring_config` file. In addition, the command creates the
 `.ring_config` and link to the given repository
@@ -32,7 +33,7 @@ build the gem
  - `gem build ring.gemspec`
 
 and install it
- - `sudo gem install ring-0.0.1.gem`
+ - `sudo gem install ring-0.0.2.gem`
 
 otherwise if you don't want it, you can source the bin directory to try. `export PATH=<bin folder>:$PATH`
 
@@ -43,7 +44,7 @@ Example of retrievable (repositories in folder, no action specified:
 ```
 miko53@F2003-GA:~/programmation/temp/test_get  $ ll
 total 0
-miko53@F2003-GA:~/programmation/temp/test_get  $ ring get ../test_ring/script/
+miko53@F2003-GA:~/programmation/temp/test_get  $ ring get git ../test_ring/script/
 Clonage dans 'script'...
 fait.
 get correctly done
@@ -74,30 +75,34 @@ miko53@F2003-GA:~/programmation/temp/test_get  $ tree
     └── ring_config
 
 5 directories, 5 files
-miko53@F2003-GA:~/programmation/temp/test_get  $ cat script/ring_config 
+miko53@F2003-GA:~/programmation/temp/test_get  $ cat script/ring_config
 ---
-version: 0.0.1
+version: 0.0.2
 list_repo:
 - name: repo_3
+  scm: git
   url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_3"
   branch: master
   folder: repo/repo_3
 - name: repo_2
   url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_2"
+  scm: git
   branch: master
   folder: repo/repo_2
 - name: repo_4
   url: "/home/miko53/programmation/temp/test_ring/repo_store/repo_4.git"
+  scm: git
   branch: master
   folder: repo_4
 actions: []
+scm: git
 ```
 
 ## Main command
 
 ### Command register
 
-`ring register <repository name> <repository url> <checkout branch> <folder where clone it>`
+`ring register <scm> <repository name> <repository url> <checkout branch> <folder where clone it>`
 
 This command declares a new repository (by including it into `ring_config` file)/
 it allows you to automatically clone it in the specified directory and checkout the right branch
@@ -159,7 +164,7 @@ This command is a little bit dangerous, with it, you can remove all previously c
 
 ### Command tag
 
-This command is used to create a tag (`git tag -a`) and propagate it on all registered repositories.
+This command is used to create a tag and propagate it on all registered repositories.
 The tag is created on the head of each repositories.
 
 ### Command checkout
@@ -174,12 +179,13 @@ In a similar way that for tag, this command push all commit of declared branchs.
 ## List of commands
 
 here we are the list of commands of ring:
- - ring get <url> : retrieve the ring configuration
- - ring init <folder> : create a new repo organization
- - ring register <name> <url> <branch> <folder> :
-    - insert a new repo inside group of depot at the specified folder
-        if folder is omitted, the repo will be retrieved at the current directory
-        if branch is also omitted, it will be considered as default one
+ - ring get <scm> <url> : retrieve ring configuration
+ - ring init <folder> (with <scm>): create a new repo organization optional with precize scm (git or hg)
+ - ring register <name> <scm> <url> <branch> <folder> :
+    - insert a new repo inside a group of repo at the specifed folder
+        <scm> indicate type of repository ('hg' or 'git' supported)
+        if <folder> is omitted, the repo will be retrieved at the current directory
+        if <branch> is also omitted, it will be considered as default one
  - ring unregister <repo_name> : remove a repository
  - ring list (|repo|tag|action) <action name, with action>:
     - gives the list of repository managed (repo or no parameter)
@@ -201,3 +207,4 @@ here we are the list of commands of ring:
  - `-s` : to simulate the command (usefull to know which commands will be launched)
  - `-v` : add verbose information
  - `-vv` : add more verbose information (debug)
+
