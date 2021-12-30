@@ -10,8 +10,8 @@ This tool can help to manage whole git/mercurial (or mixed) repository.
 
 ring uses a special repository to store information about another one.
 It is declared with the command:
- - `ring init <folder>`
-with this command, ring creates a GIT repository in `<folder>` and stores inside
+ - `ring init <folder> with <scm>`
+with this command, ring creates a repository with the specified scm (`git` or `hg`) in `<folder>` and stores inside
 a file `ring_config` which stores all necessary information on repository.
 Moreover a file `.ring_config` is created when the command is launched and do a link
 with the `<folder>` directory
