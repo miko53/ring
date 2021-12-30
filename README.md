@@ -119,13 +119,13 @@ Returns the list of registred repositories
 
 `ring status`
 
-This command executes a `git status` on each declared repository and displays the result.
+This command executes a `git status` or `hg status` on each declared repository and displays the result.
 
 ### Command clone
 
 `ring clone`
 With this command you can retrieve all the registered repositories listed in the configuration file.
-By executing the `git clone` command.
+By executing the `git clone` or `hg clone` command.
 
 It is probably the second command after the `ring get` one
 
