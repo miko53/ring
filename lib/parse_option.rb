@@ -10,6 +10,7 @@ class ParseOptionState
   PARSE_LIST_COMMAND = 6
 end
 
+# class which parse option given in command-line
 class ParseOption
   attr_reader :command, :args, :simulate, :verbose
 
@@ -76,7 +77,7 @@ class ParseOption
       end
     when :register
       in_error = true if @args.count < 3
-      in_error = true unless @args[1] == "git" || @args[1] == "hg"
+      in_error = true unless @args[1] == 'git' || @args[1] == 'hg'
     when :unregister
       in_error = true if @args.count < 1
     when :help, :version, :list, :list_tag, :list_action, :status, :clone, :push
@@ -116,7 +117,7 @@ class ParseOption
         puts 'scm, url must be given for get command'
         in_error = true
       end
-      in_error = true unless @args[0] == "git" || @args[0] == "hg"
+      in_error = true unless @args[0] == 'git' || @args[0] == 'hg'
     when :checkout_tag
       if @args.count < 1
         puts 'tag name must be given'

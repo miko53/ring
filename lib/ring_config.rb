@@ -68,7 +68,7 @@ class RingConfig
   end
 
   def scm
-    return @config['scm']
+    @config['scm']
   end
 
   private

@@ -5,26 +5,20 @@ require_relative 'ring_scm'
 require_relative 'process'
 require_relative 'log'
 
+# main class which executes user request
 class RingCore
 
   def self.get_scm(args)
-    if args.count >= 3
-      return nil unless args[args.count-2] == "with"
-      case args[args.count-1]
-      when 'git','hg'
-        return args[args.count-1]
-      else
-        Log.display 'wrong scm, should be \'git\' or \'hg\''
-        return nil
-      end
-    else
-      return "git"
-    end
+    return 'git' unless args.count < 2
+    return nil unless args[args.count - 2] == 'with'
+    return args[args.count - 1] if args[args.count - 1] == 'git' || args[args.count - 1] == 'hg'
+
+    Log.display 'wrong scm, should be \'git\' or \'hg\''
+    nil
   end
 
   def self.perform_initialize(args, simulate)
-
-    #p get_scm(args)
+    # p get_scm(args)
     scm = get_scm(args)
     return if scm.nil?
 
@@ -57,7 +51,11 @@ class RingCore
     end
 
     if !in_error
-      args[1].nil? ? default_folder = default_folder_name(args[1]) : default_folder = args[2]
+      default_folder = if args[1].nil?
+                         default_folder_name(args[1])
+                       else
+                         args[2]
+                       end
       config = RingConfig.new
       status = config.create_link_file(default_folder)
       Log.display 'get correctly done' if status == true
@@ -77,7 +75,9 @@ class RingCore
       args[3] = 'master' if args[3].nil? && args[1] == 'git'
       args[3] = 'default' if args[3].nil? && args[1] == 'hg'
       args[4] = default_folder_name(args[2]) if args[4].nil?
-      rconfig.config['list_repo'] << { 'name' => args[0], 'scm' => args[1], 'url' => args[2], 'branch' => args[3], 'folder' => args[4] }
+      rconfig.config['list_repo'] << { 'name' => args[0], 'scm' => args[1],
+                                       'url' => args[2], 'branch' => args[3],
+                                       'folder' => args[4] }
       rconfig.save unless simulate
       Log.display 'register correctly done!'
     else
@@ -196,7 +196,7 @@ class RingCore
   end
 
   def self.repo(rconfig, repo_name)
-    rconfig.config['list_repo'].select { |repo| repo['name'] == repo_name}.first
+    rconfig.config['list_repo'].select { |repo| repo['name'] == repo_name }.first
   end
 
   def self.perform_list_action(args, _simulate)
@@ -326,7 +326,7 @@ class RingCore
     scm_obj = nil
     case scm
     when 'git'
-      scm_obj= RingScmGit.new
+      scm_obj = RingScmGit.new
     when 'hg'
       scm_obj = RingScmHg.new
     else

@@ -3,7 +3,6 @@
 # Log class to filtrate some message
 # according to required level
 class Log
-
   def initialize
     @@verbose_level = 0
   end
@@ -44,14 +43,12 @@ class Log
       puts "\e[31m"
     when :green
       puts "\e[32m"
-    else
     end
   end
 
-  def self.uncolorize(color)
+  def self.uncolorize(_color)
     puts "\e[0m"
   end
 
   private_class_method :colorize, :uncolorize
-
 end

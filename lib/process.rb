@@ -2,6 +2,8 @@
 
 require_relative 'log'
 
+# class which launches a process (if not in simulation)
+# to execute a configuration management operation
 class CProcess
   def self.execute(command, is_simulation)
     if is_simulation == true
