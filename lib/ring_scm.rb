@@ -74,8 +74,10 @@ class RingScmHg
     r = CProcess.execute("cd #{repo['folder']} && hg branch", simulate)
     Log.display("In branch #{r[0]}") if r[1].zero?
     r = CProcess.execute("cd #{repo['folder']} && hg status", simulate)
-    Log.display(r[0].to_s) unless r[0].empty? && r[1].zero?
-    Log.display('Your branch is up-to-date') if r[0].empty? && r[1].zero?
+    Log.display(r[0].to_s) unless simulate == true || (r[0].empty? && r[1].zero?)
+    Log.display('Your branch is up-to-date') if simulate == false && r[0].empty? && r[1].zero?
+    r = CProcess.execute("cd #{repo['folder']} && hg outgoing", simulate)
+    Log.display(r[0])
   end
 
   def get(url, folder, simulate)

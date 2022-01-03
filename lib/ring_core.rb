@@ -9,10 +9,9 @@ require_relative 'log'
 class RingCore
 
   def self.get_scm(args)
-    return 'git' unless args.count < 2
+    return 'git' unless args.count >= 3
     return nil unless args[args.count - 2] == 'with'
     return args[args.count - 1] if args[args.count - 1] == 'git' || args[args.count - 1] == 'hg'
-
     Log.display 'wrong scm, should be \'git\' or \'hg\''
     nil
   end
